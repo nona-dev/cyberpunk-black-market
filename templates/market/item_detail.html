@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ item.name }} - Черный Рынок{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        {% if item.image %}
+            <img src="{{ item.image.url }}" class="img-fluid rounded" alt="{{ item.name }}">
+        {% else %}
+            <div class="bg-dark rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <i class="fas fa-box-open fa-5x text-muted"></i>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <h1 class="card-title text-white">{{ item.name }}</h1>
+                <div class="mb-3">
+                    <span class="badge bg-secondary">{{ item.category.name }}</span>
+                    <span class="badge rarity-badge rarity-{{ item.rarity }}">{{ item.get_rarity_display }}</span>
+                    {% if item.required_tier > 1 %}
+                        <span class="badge bg-info">TIER {{ item.required_tier }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="price display-6 mb-3 text-cyan">{{ item.price }} eb</div>
+                
+                <p class="lead text-light">{{ item.description }}</p>
+                
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <small class="text-muted">В наличии:</small>
+                        <div class="fs-5 text-white">{{ item.stock }} шт.</div>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">Добавлен:</small>
+                        <div class="fs-5 text-white">{{ item.created_at|date:"d.m.Y" }}</div>
+                    </div>
+                </div>
+                
+                <!-- Система TIER -->
+                {% if item.required_tier > 1 %}
+                    {% if not user.is_authenticated %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong class="text-dark">ДОСТУПНО С {{ item.get_required_tier_display }}</strong>
+                            <br>
+                            <small class="text-dark">Войдите в систему, чтобы проверить ваш TIER уровень</small>
+                        </div>
+                        <a href="{% url 'login' %}" class="btn btn-warning btn-lg w-100 mb-2">
+                            <i class="fas fa-sign-in-alt"></i> Войти для покупки
+                        </a>
+                    {% else %}
+                        {% with user_profile=request.user.userprofile %}
+                            {% if user_profile.tier >= item.required_tier %}
+                                {% if item.stock > 0 and item.is_available %}
+                                    <a href="{% url 'add_to_cart' item.id %}" class="btn btn-cyber btn-lg w-100">
+                                        <i class="fas fa-shopping-cart"></i> Купить сейчас
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-secondary btn-lg w-100" disabled>
+                                        <i class="fas fa-times"></i> Нет в наличии
+                                    </button>
+                                {% endif %}
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <strong class="text-dark">ДОСТУПНО С {{ item.get_required_tier_display }}</strong>
+                                    <br>
+                                    <small class="text-dark">Ваш текущий TIER: {{ user_profile.get_tier_display }}</small>
+                                </div>
+                                <button class="btn btn-secondary btn-lg w-100" disabled>
+                                    <i class="fas fa-lock"></i> Недостаточный TIER
+                                </button>
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                {% else %}
+                    <!-- Обычные товары (TIER 1) -->
+                    {% if item.stock > 0 and item.is_available %}
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'add_to_cart' item.id %}" class="btn btn-cyber btn-lg w-100">
+                                <i class="fas fa-shopping-cart"></i> Купить сейчас
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-warning btn-lg w-100">
+                                <i class="fas fa-sign-in-alt"></i> Войдите для покупки
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <button class="btn btn-secondary btn-lg w-100" disabled>
+                            <i class="fas fa-times"></i> Нет в наличии
+                        </button>
+                    {% endif %}
+                {% endif %}
+                
+                <div class="mt-3">
+                    <small class="text-warning">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Все сделки необратимы. Гарантии не предоставляются.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h5 class="text-white"><i class="fas fa-info-circle"></i> Характеристики товара</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-white">Основные характеристики</h6>
+                        <ul class="list-unstyled">
+                            {% if item.requirement %}
+                                <li class="text-light"><strong class="text-white">ТРЕБОВАНИЕ:</strong> {{ item.requirement }}</li>
+                            {% endif %}
+                            {% if item.mount_location != 'none' %}
+                                <li class="text-light"><strong class="text-white">МЕСТО УСТАНОВКИ:</strong> {{ item.get_mount_location_display }}</li>
+                            {% endif %}
+                            {% if item.humanity_loss > 0 %}
+                                <li class="text-light"><strong class="text-white">ПОТЕРЯ ЧЕЛОВЕЧНОСТИ:</strong> {{ item.humanity_loss }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-white">Боевые характеристики</h6>
+                        <ul class="list-unstyled">
+                            {% if item.bonus_to_hit != 0 %}
+                                <li class="text-light"><strong class="text-white">БОНУС К ПОПАДАНИЮ:</strong> {{ item.bonus_to_hit }}</li>
+                            {% endif %}
+                            {% if item.damage %}
+                                <li class="text-light"><strong class="text-white">УРОН:</strong> {{ item.damage }}</li>
+                            {% endif %}
+                            {% if item.sdp > 0 %}
+                                <li class="text-light"><strong class="text-white">СКА:</strong> {{ item.sdp }}</li>
+                            {% endif %}
+                            {% if item.ammo_capacity > 0 %}
+                                <li class="text-light"><strong class="text-white">ОБОЙМА:</strong> {{ item.ammo_capacity }}</li>
+                            {% endif %}
+                            {% if item.upgrade_slots > 0 %}
+                                <li class="text-light"><strong class="text-white">СЛОТЫ УЛУЧШЕНИЯ:</strong> {{ item.upgrade_slots }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h6 class="text-white">Описание</h6>
+                    <p class="text-light">{{ item.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-cyan {
+        color: #00f0ff !important;
+    }
+    
+    .text-light {
+        color: #cccccc !important;
+    }
+    
+    .text-white {
+        color: #ffffff !important;
+    }
+    
+    .text-muted {
+        color: #888888 !important;
+    }
+    
+    /* Цвета редкости */
+    .rarity-common {
+        border-left: 4px solid #3399ff !important; /* Обычный синий */
+    }
+    
+    .rarity-rare {
+        border-left: 4px solid #0066cc !important; /* Редкий темно-синий */
+    }
+    
+    .rarity-epic {
+        border-left: 4px solid #9933cc !important; /* Эпический фиолетовый */
+    }
+    
+    .rarity-legendary {
+        border-left: 4px solid #ff9900 !important; /* Легендарный оранжевый */
+    }
+    
+    /* Бейджи редкости */
+    .rarity-badge.rarity-common {
+        background-color: #3399ff !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-rare {
+        background-color: #0066cc !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-epic {
+        background-color: #9933cc !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-legendary {
+        background-color: #ff9900 !important;
+        color: white !important;
+    }
+    
+    .price {
+        color: #00f0ff !important;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

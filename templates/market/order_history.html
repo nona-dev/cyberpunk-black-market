@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои заказы - Черный Рынок{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="text-white mb-4"><i class="fas fa-history"></i> История заказов</h2>
+        <p class="text-light mb-4">Все ваши сделки на Черном Рынке</p>
+    </div>
+</div>
+
+{% if orders %}
+    {% for order in orders %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary shadow">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 mb-3 mb-md-0">
+                            <h6 class="text-cyan mb-1">Заказ #{{ order.id }}</h6>
+                            <small class="text-muted">{{ order.created_at|date:"d.m.Y H:i" }}</small>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="text-light">
+                                <i class="fas fa-info-circle"></i> 
+                                Статус: 
+                                <span class="badge 
+                                    {% if order.status == 'pending' %}bg-warning text-dark
+                                    {% elif order.status == 'confirmed' %}bg-info text-dark
+                                    {% elif order.status == 'shipped' %}bg-primary
+                                    {% elif order.status == 'delivered' %}bg-success
+                                    {% elif order.status == 'cancelled' %}bg-danger
+                                    {% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="text-light">
+                                <i class="fas fa-coins"></i> 
+                                Сумма: <span class="price fw-bold">{{ order.total_price }} eb</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <small class="text-light">
+                                <i class="fas fa-map-marker-alt"></i> 
+                                Адрес: {{ order.delivery_address|truncatewords:5 }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="text-center py-5">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                <h4 class="text-white mb-3">У вас пока нет заказов</h4>
+                <p class="text-light mb-4">Начните покупки на Черном Рынке</p>
+                <a href="{% url 'item_list' %}" class="btn btn-cyber">
+                    <i class="fas fa-shopping-bag"></i> Перейти к товарам
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+    /* Улучшенные стили для лучшей читаемости */
+    .text-cyan {
+        color: #00f0ff !important;
+    }
+    
+    .text-light {
+        color: #cccccc !important;
+    }
+    
+    .text-white {
+        color: #ffffff !important;
+    }
+    
+    .text-muted {
+        color: #888888 !important;
+    }
+    
+    .price {
+        color: #00f0ff !important;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    
+    .card {
+        background-color: rgba(30, 30, 30, 0.9) !important;
+    }
+    
+    .badge {
+        font-weight: 500;
+    }
+    
+    /* Улучшенные отступы и тени */
+    .shadow {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    /* Адаптивность для мобильных устройств */
+    @media (max-width: 768px) {
+        .text-md-end {
+            text-align: left !important;
+        }
+        
+        .mb-md-0 {
+            margin-bottom: 1rem !important;
+        }
+    }
+    
+    /* Цвета редкости */
+    .rarity-common {
+        border-left: 4px solid #3399ff !important; /* Обычный синий */
+    }
+    
+    .rarity-rare {
+        border-left: 4px solid #0066cc !important; /* Редкий темно-синий */
+    }
+    
+    .rarity-epic {
+        border-left: 4px solid #9933cc !important; /* Эпический фиолетовый */
+    }
+    
+    .rarity-legendary {
+        border-left: 4px solid #ff9900 !important; /* Легендарный оранжевый */
+    }
+</style>
+{% endblock %}

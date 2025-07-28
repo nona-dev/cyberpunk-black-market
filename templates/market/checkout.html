@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Оформление заказа - Черный Рынок{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h2 class="text-white mb-4"><i class="fas fa-clipboard-check"></i> Оформление заказа</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card bg-dark border-secondary mb-4">
+            <div class="card-header bg-dark border-secondary">
+                <h4 class="text-white mb-0">Состав заказа</h4>
+            </div>
+            <div class="card-body">
+                {% if cart.items.all %}
+                    <div class="table-responsive">
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
+                                    <th>Итого</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart.items.all %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if item.item.image %}
+                                                <img src="{{ item.item.image.url }}" class="me-3" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ item.item.name }}">
+                                            {% endif %}
+                                            <div>
+                                                <span class="text-white">{{ item.item.name }}</span>
+                                                <br>
+                                                <small class="badge rarity-badge rarity-{{ item.item.rarity }}">{{ item.item.get_rarity_display }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-cyan">{{ item.item.price }} eb</td>
+                                    <td class="text-light">{{ item.quantity }}</td>
+                                    <td class="text-cyan fw-bold">{{ item.get_total_price }} eb</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <h4 class="text-white">Итого: <span class="price">{{ cart.get_total_price }} eb</span></h4>
+                    </div>
+                {% else %}
+                    <p class="text-light">Корзина пуста</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h4 class="text-white mb-0">Информация для доставки</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.delivery_address.id_for_label }}" class="form-label text-light">Адрес доставки</label>
+                        {{ form.delivery_address }}
+                        {% if form.delivery_address.errors %}
+                            <div class="text-danger small">{{ form.delivery_address.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span class="text-dark">
+                            <strong>Важно!</strong> Убедитесь, что адрес доставки указан правильно. 
+                            Доставка осуществляется на ваш страх и риск.
+                        </span>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'cart_detail' %}" class="btn btn-outline-light">
+                            <i class="fas fa-arrow-left"></i> Назад в корзину
+                        </a>
+                        <button type="submit" class="btn btn-cyber">
+                            <i class="fas fa-check"></i> Подтвердить заказ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h5 class="text-white mb-0"><i class="fas fa-info-circle"></i> Информация</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-white">Оплата</h6>
+                <p class="text-light small">
+                    Оплата производится в кредитах. Сумма будет списана с вашего счета 
+                    после подтверждения заказа.
+                </p>
+                
+                <h6 class="text-white">Доставка</h6>
+                <p class="text-light small">
+                    Среднее время доставки: 2-4 часа. 
+                    Курьеры работают 24/7 в пределах Night City.
+                </p>
+                
+                <h6 class="text-white">Гарантии</h6>
+                <p class="text-light small">
+                    Все сделки необратимы. Гарантии не предоставляются. 
+                    Используйте товары на свой страх и риск.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-cyan {
+        color: #00f0ff !important;
+    }
+    
+    .price {
+        color: #00f0ff !important;
+        font-weight: bold;
+    }
+    
+    .form-control {
+        background-color: #222 !important;
+        color: #fff !important;
+        border-color: #444 !important;
+    }
+    
+    /* Цвета редкости для бейджей */
+    .rarity-badge.rarity-common {
+        background-color: #3399ff !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-rare {
+        background-color: #0066cc !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-epic {
+        background-color: #9933cc !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-legendary {
+        background-color: #ff9900 !important;
+        color: white !important;
+    }
+</style>
+{% endblock %}

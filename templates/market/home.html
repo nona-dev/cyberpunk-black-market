@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Черный Рынок Cyberpunk RED{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center mb-5" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?auto=format&fit=crop') center/cover; padding: 100px 0; border-radius: 15px;">
+    <h1 class="display-4 glitch-text text-white" data-text="ДОБРО ПОЖАЛОВАТЬ">ДОБРО ПОЖАЛОВАТЬ</h1>
+    <p class="lead text-light">В самый опасный черный рынок Найт-Сити</p>
+    <hr class="my-4" style="border-color: var(--cyber-red);">
+    <p class="text-light">Здесь вы найдете всё необходимое для выживания в мире киберпанка</p>
+    <a class="btn btn-cyber btn-lg" href="{% url 'item_list' %}" role="button">
+        <i class="fas fa-shopping-cart"></i> Просмотреть товары
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="text-white"><i class="fas fa-fire"></i> Горячие предложения</h2>
+    </div>
+</div>
+
+<div class="row">
+    {% for item in featured_items %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 bg-dark border-secondary rarity-{{ item.rarity }}">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-dark d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-box-open fa-3x text-muted"></i>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title text-white">{{ item.name }}</h5>
+                <p class="card-text text-light">{{ item.description|truncatewords:15 }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="price text-cyan">{{ item.price }} eb</span>
+                    <small class="rarity-badge rarity-{{ item.rarity }}">{{ item.get_rarity_display }}</small>
+                </div>
+            </div>
+            <div class="card-footer bg-dark border-secondary">
+                <a href="{% url 'item_detail' item.pk %}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-eye"></i> Подробнее
+                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'add_to_cart' item.id %}" class="btn btn-sm btn-cyber">
+                        <i class="fas fa-shopping-cart"></i> Купить
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-center text-light">Нет доступных товаров</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <h5 class="card-title text-white"><i class="fas fa-exclamation-triangle text-warning"></i> Правила рынка</h5>
+                <ul class="text-light">
+                    <li>Все сделки необратимы</li>
+                    <li>Гарантии не предоставляются</li>
+                    <li>Оплата только в кредитах</li>
+                    <li>Доставка на ваш страх и риск</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-dark border-secondary">
+            <div class="card-body">
+                <h5 class="card-title text-white"><i class="fas fa-shield-alt text-info"></i> Безопасность</h5>
+                <p class="text-light">
+                    Наши поставщики проверены на детекторе лжи. 
+                    Мы не несем ответственности за возможные побочные эффекты 
+                    от использования товаров.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-cyan {
+        color: #00f0ff !important;
+    }
+    
+    .text-light {
+        color: #cccccc !important;
+    }
+    
+    .text-white {
+        color: #ffffff !important;
+    }
+    
+    .text-muted {
+        color: #888888 !important;
+    }
+    
+    /* Цвета редкости */
+    .rarity-common {
+        border-left: 4px solid #3399ff !important; /* Обычный синий */
+    }
+    
+    .rarity-rare {
+        border-left: 4px solid #0066cc !important; /* Редкий темно-синий */
+    }
+    
+    .rarity-epic {
+        border-left: 4px solid #9933cc !important; /* Эпический фиолетовый */
+    }
+    
+    .rarity-legendary {
+        border-left: 4px solid #ff9900 !important; /* Легендарный оранжевый */
+    }
+    
+    /* Бейджи редкости */
+    .rarity-badge.rarity-common {
+        background-color: #3399ff !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-rare {
+        background-color: #0066cc !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-epic {
+        background-color: #9933cc !important;
+        color: white !important;
+    }
+    
+    .rarity-badge.rarity-legendary {
+        background-color: #ff9900 !important;
+        color: white !important;
+    }
+    
+    .price {
+        color: #00f0ff !important;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}

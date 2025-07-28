@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}О рынке - Черный Рынок{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron text-center mb-5" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1519547043936-0a48185f865d?auto=format&fit=crop') center/cover; padding: 100px 0; border-radius: 15px;">
+            <h1 class="display-4 glitch-text text-white" data-text="ЧЕРНЫЙ РЫНОК">ЧЕРНЫЙ РЫНОК</h1>
+            <p class="lead text-light">Самое опасное место в Найт-Сити</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card bg-dark border-secondary mb-4">
+            <div class="card-body">
+                <h3 class="text-white"><i class="fas fa-skull"></i> Добро пожаловать в самый опасный рынок Night City</h3>
+                <p class="lead text-light">
+                    Здесь вы найдете всё, что нужно для выживания в мире киберпанка. 
+                    От самой современной брони до редчайших киберимплантов.
+                </p>
+                
+                <h4 class="mt-4 text-white">Правила рынка</h4>
+                <ul class="text-light">
+                    <li class="mb-2"><i class="fas fa-exclamation-triangle text-warning"></i> Все сделки необратимы</li>
+                    <li class="mb-2"><i class="fas fa-shield-alt text-info"></i> Гарантии не предоставляются</li>
+                    <li class="mb-2"><i class="fas fa-credit-card text-success"></i> Оплата только в кредитах</li>
+                    <li class="mb-2"><i class="fas fa-truck text-primary"></i> Доставка на ваш страх и риск</li>
+                    <li class="mb-2"><i class="fas fa-user-secret text-danger"></i> Анонимность гарантирована</li>
+                </ul>
+                
+                <h4 class="mt-4 text-white">Наши преимущества</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-light mb-2"><i class="fas fa-check-circle text-success"></i> Проверенные поставщики</p>
+                        <p class="text-light mb-2"><i class="fas fa-bolt text-warning"></i> Быстрая доставка</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-light mb-2"><i class="fas fa-lock text-info"></i> Безопасные транзакции</p>
+                        <p class="text-light mb-2"><i class="fas fa-tags text-success"></i> Лучшие цены</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-dark border-secondary mb-4">
+            <div class="card-header bg-dark border-secondary">
+                <h5 class="text-white"><i class="fas fa-info-circle"></i> Контакты</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-light mb-2"><i class="fas fa-map-marker-alt text-white"></i> Архив 8, Сектор 7</p>
+                <p class="text-light mb-2"><i class="fas fa-phone text-white"></i> NetCat: 555-NE-TRUN</p>
+                <p class="text-light mb-2"><i class="fas fa-envelope text-white"></i> blackmarket@arpanet.net</p>
+                <p class="text-light mb-2"><i class="fas fa-clock text-white"></i> Работаем 24/7</p>
+            </div>
+        </div>
+        
+        <div class="card bg-dark border-secondary">
+            <div class="card-header bg-dark border-secondary">
+                <h5 class="text-white"><i class="fas fa-exclamation-triangle"></i> Предупреждение</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-warning">
+                    <small>
+                        Использование товаров с Черного Рынка может привести к 
+                        необратимым последствиям. Администрация не несет 
+                        ответственности за последствия использования товаров.
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-light {
+        color: #cccccc !important;
+    }
+    
+    .text-white {
+        color: #ffffff !important;
+    }
+    
+    .text-warning {
+        color: #ffc107 !important;
+    }
+    
+    .lead {
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+    
+    ul {
+        padding-left: 1rem;
+    }
+    
+    li {
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
