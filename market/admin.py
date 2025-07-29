@@ -29,7 +29,7 @@ class ItemAdmin(admin.ModelAdmin):
         """Действие: Сделать копии выбранных товаров"""
         count = 0
         for item in queryset:
-            # Создаем копию товара
+            # Создаемaaa копию товара
             item.pk = None  # Сбрасываем первичный ключ, чтобы создать новую запись
             item.name = f"{item.name} (копия)"
             item.save()
