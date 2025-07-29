@@ -147,3 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login/Logout redirects (Optional, but useful)
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Media files (Uploaded files like item images)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
