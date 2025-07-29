@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Мессенджер - Ваши диалоги{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Блок со списком чатов -->
+        <div class="col-lg-4 col-md-5 mb-4">
+            <div class="card bg-dark border-secondary h-100">
+                <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
+                    <h5 class="text-yellow mb-0"><i class="fas fa-comments"></i> Ваши диалоги</h5>
+                    <span class="badge bg-cyber">{{ conversations.count }}</span>
+                </div>
+                <div class="card-body p-0" style="overflow-y: auto; max-height: calc(100vh - 200px);">
+                    {% if conversations %}
+                        <div class="list-group list-group-flush">
+                            {% for conversation in conversations %}
+                                <a href="{% url 'messaging:conversation_detail' conversation.id %}" 
+                                   class="list-group-item list-group-item-action bg-dark border-secondary {% if not conversation.unread_count %}opacity-75{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1 text-white">
+                                                {% for participant in conversation.participants.all %}
+                                                    {% if participant != request.user %}
+                                                        {{ participant.username }}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </h6>
+                                            <small class="text-muted">
+                                                {% if conversation.messages.last %}
+                                                    {{ conversation.messages.last.content|truncatewords:5 }}
+                                                {% else %}
+                                                    Начните диалог...
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">
+                                                {{ conversation.updated_at|date:"d.m H:i" }}
+                                            </small>
+                                            {% if conversation.unread_count > 0 %}
+                                                <span class="badge bg-danger ms-1">{{ conversation.unread_count }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center p-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-light">У вас пока нет диалогов</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Блок с информацией о мессенджере -->
+        <div class="col-lg-8 col-md-7">
+            <div class="card bg-dark border-secondary h-100">
+                <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
+                    <i class="fas fa-comment-dots fa-5x text-yellow mb-4"></i>
+                    <h3 class="text-yellow">Черный Мессенджер</h3>
+                    <p class="text-light">
+                        Добро пожаловать в защищенную систему обмена сообщениями Найт-Сити.
+                    </p>
+                    <p class="text-muted small">
+                        Все сообщения шифруются и уничтожаются через 72 часа после прочтения.
+                    </p>
+                    {% if conversations %}
+                        <a href="{% url 'messaging:conversation_detail' conversations.first.id %}" class="btn btn-cyber">
+                            <i class="fas fa-arrow-right"></i> Открыть последний диалог
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge.bg-cyber {
+        background: linear-gradient(45deg, #fcee09, #d4c000);
+        color: #000 !important;
+        font-weight: bold;
+    }
+    
+    .list-group-item:hover {
+        background-color: rgba(252, 238, 9, 0.1) !important;
+        border-color: #fcee09 !important;
+    }
+    
+    .list-group-item:not(.opacity-75) {
+        border-left: 3px solid #fcee09;
+    }
+</style>
+{% endblock %}

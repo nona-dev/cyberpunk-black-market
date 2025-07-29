@@ -1,52 +1,62 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Черный Рынок Cyberpunk RED{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
         :root {
             --cyber-red: #ff003c;
             --cyber-blue: #00f0ff;
+            --cyber-yellow: #fcee09; /* Добавлен для мессенджера */
             --dark-bg: #0a0a0a;
             --darker-bg: #000000;
+            --panel-bg: #141414; /* Цвет панелей */
             --text-light: #ffffff;
             --text-gray: #cccccc;
+            --text-muted: #aaaaaa; /* Более контрастный приглушённый цвет */
         }
-        
+
         body {
             background-color: var(--dark-bg);
             color: var(--text-light);
             font-family: 'Courier New', monospace;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(255, 0, 60, 0.05) 0%, transparent 20%);
         }
-        
+
+        /* Навигация */
         .navbar {
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.95); /* Сделано ещё темнее */
             border-bottom: 1px solid var(--cyber-blue);
             backdrop-filter: blur(10px);
         }
-        
+
         .navbar-brand {
             color: var(--cyber-red) !important;
             font-weight: bold;
             text-shadow: 0 0 10px var(--cyber-red);
         }
-        
+
         .nav-link {
             color: var(--text-gray) !important;
             transition: all 0.3s;
         }
-        
+
         .nav-link:hover {
             color: var(--cyber-blue) !important;
             text-shadow: 0 0 5px var(--cyber-blue);
         }
-        
+
+        /* Кнопки */
         .btn-cyber {
             background: linear-gradient(45deg, var(--cyber-red), var(--cyber-blue));
             border: none;
@@ -55,49 +65,53 @@
             overflow: hidden;
             transition: all 0.3s;
         }
-        
+
         .btn-cyber:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 0, 60, 0.4);
         }
-        
+
+        /* Карточки */
         .card {
-            background-color: rgba(20, 20, 20, 0.8);
+            background-color: rgba(20, 20, 20, 0.9); /* Сделано ещё темнее */
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.3s;
         }
-        
+
         .card:hover {
             transform: translateY(-5px);
             border-color: var(--cyber-blue);
             box-shadow: 0 10px 25px rgba(0, 240, 255, 0.2);
         }
-        
+
         .card-title {
             color: var(--cyber-red);
         }
-        
+
         .price {
             color: var(--cyber-blue);
             font-weight: bold;
             font-size: 1.2em;
         }
-        
+
+        /* Редкость (оставлено как есть, но можно адаптировать под cyber-yellow) */
         .rarity-common { border-left: 4px solid #6c757d; }
         .rarity-rare { border-left: 4px solid #007bff; }
         .rarity-epic { border-left: 4px solid #6f42c1; }
         .rarity-legendary { border-left: 4px solid #ffc107; }
-        
+
+        /* Футер */
         .footer {
             background-color: var(--darker-bg);
             border-top: 1px solid var(--cyber-red);
             color: var(--text-gray);
         }
-        
+
+        /* Эффекты glitch */
         .glitch-text {
             position: relative;
         }
-        
+
         .glitch-text::before,
         .glitch-text::after {
             content: attr(data-text);
@@ -107,21 +121,21 @@
             width: 100%;
             height: 100%;
         }
-        
+
         .glitch-text::before {
             left: 2px;
             text-shadow: -2px 0 #ff00c1;
             clip: rect(44px, 450px, 56px, 0);
             animation: glitch-anim 5s infinite linear alternate-reverse;
         }
-        
+
         .glitch-text::after {
             left: -2px;
             text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
             clip: rect(44px, 450px, 56px, 0);
             animation: glitch-anim2 5s infinite linear alternate-reverse;
         }
-        
+
         @keyframes glitch-anim {
             0% { clip: rect(42px, 9999px, 44px, 0); }
             5% { clip: rect(12px, 9999px, 59px, 0); }
@@ -145,7 +159,7 @@
             95% { clip: rect(60px, 9999px, 89px, 0); }
             100% { clip: rect(52px, 9999px, 74px, 0); }
         }
-        
+
         @keyframes glitch-anim2 {
             0% { clip: rect(65px, 9999px, 100px, 0); }
             5% { clip: rect(52px, 9999px, 74px, 0); }
@@ -169,17 +183,97 @@
             95% { clip: rect(42px, 9999px, 97px, 0); }
             100% { clip: rect(38px, 9999px, 49px, 0); }
         }
+
+        /* Стили для уведомлений */
+        /* Улучшена читаемость цветных уведомлений */
+        .alert-success {
+            color: #000000; /* Черный текст */
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+
+        .alert-danger {
+            color: #000000; /* Черный текст */
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+
+        .alert-warning {
+            color: #000000; /* Черный текст */
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+        }
+
+        .alert-info {
+            color: #000000; /* Черный текст */
+            background-color: #cff4fc;
+            border-color: #b6effb;
+        }
+
+        /* Стили для мессенджера */
+        .text-yellow { color: var(--cyber-yellow) !important; }
+        .text-cyan { color: var(--cyber-blue) !important; }
+        .border-cyber { border-color: var(--cyber-yellow) !important; }
+        .bg-cyber-panel { background-color: var(--panel-bg) !important; }
+        
+        .badge.bg-cyber {
+            background: linear-gradient(45deg, var(--cyber-yellow), #d4c000);
+            color: #000 !important;
+            font-weight: bold;
+        }
+        
+        .btn-outline-cyber {
+            border-color: var(--cyber-yellow);
+            color: var(--cyber-yellow);
+        }
+        
+        .btn-outline-cyber:hover {
+            background-color: var(--cyber-yellow);
+            color: #000 !important;
+        }
+
+        /* Стили для полей ввода */
+        .form-control, .form-select {
+            background-color: var(--dark-bg) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: var(--text-light) !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--cyber-blue) !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 240, 255, 0.25) !important;
+        }
+
+        /* Улучшенный скроллбар */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--cyber-blue);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyber-yellow);
+        }
+
     </style>
+    
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Навигация -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand glitch-text" data-text="ЧЕРНЫЙ РЫНОК" href="{% url 'home' %}">
-                <i class="fas fa-skull"></i> ЧЕРНЫЙ РЫНОК
-            </a>
+            <a class="navbar-brand" href="{% url 'home' %}"><i class="fas fa-skull"></i> ЧЕРНЫЙ РЫНОК</a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -199,59 +293,23 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'order_history' %}">
-                                <i class="fas fa-history"></i> Мои заказы
-                            </a>
+                            <a class="nav-link" href="{% url 'messaging:inbox' %}"><i class="fas fa-envelope"></i> Сообщения</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Выйти ({{ user.username }})
-                            </a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt"></i> Вход
-                            </a>
+                            <a class="nav-link" href="{% url 'cart_detail' %}"><i class="fas fa-shopping-cart"></i> Корзина</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus"></i> Регистрация
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cart_detail' %}">
-                                <i class="fas fa-shopping-cart"></i> 
-                                Корзина 
-                                {% if user.cart.items.count > 0 %}
-                                    <span class="badge bg-danger">{{ user.cart.get_total_items }}</span>
-                                {% endif %}
-                            </a>
+                            <a class="nav-link" href="{% url 'order_history' %}"><i class="fas fa-history"></i> Мои заказы</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'order_history' %}">
-                                <i class="fas fa-history"></i> Мои заказы
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Выйти ({{ user.username }})
-                            </a>
+                            <a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Выйти ({{ user.username }})</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt"></i> Вход
-                            </a>
+                            <a class="nav-link" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Вход</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus"></i> Регистрация
-                            </a>
+                            <a class="nav-link" href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Регистрация</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -261,15 +319,21 @@
 
     <!-- Основной контент -->
     <main class="container mt-4">
+        <!-- 
+            Отображаем только важные сообщения. 
+            Сообщения об успешной отправке сообщений в мессенджере будут игнорироваться.
+        -->
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+                <!-- Проверяем, не является ли сообщение о простой отправке сообщения -->
+                {% if not "отправлено" in message|stringformat:"s" or not "Сообщение" in message|stringformat:"s" %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
             {% endfor %}
         {% endif %}
-        
         {% block content %}
         {% endblock %}
     </main>
@@ -283,13 +347,16 @@
                     <p class="text-muted">Нелегальные товары для ваших киберпанк приключений</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="text-muted">© 2024 Черный Рынок. Все сделки на ваш страх и риск.</p>
-                    <p class="text-muted"><small>Street Legal LLC • Архив 8 • Сектор 7</small></p>
+                    <p class="text-muted">&copy; 2025 Черный Рынок. Все права защищены.</p>
+                    <p class="text-muted small">Цены в кредитах (eb)</p>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Bootstrap 5 JS и Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

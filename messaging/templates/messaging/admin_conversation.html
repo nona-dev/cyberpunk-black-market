@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ-панель мессенджеров{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-dark border-secondary d-flex justify-content-between align-items-center">
+                    <h4 class="text-yellow mb-0"><i class="fas fa-shield-alt"></i> Админ-панель мессенджеров</h4>
+                    <span class="badge bg-cyber">{{ conversations.count }} диалогов</span>
+                </div>
+                <div class="card-body">
+                    {% if conversations %}
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Участники</th>
+                                        <th>Сообщений</th>
+                                        <th>Непрочитанных</th>
+                                        <th>Последнее сообщение</th>
+                                        <th>Статус</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for conversation in conversations %}
+                                        <tr>
+                                            <td>{{ conversation.id }}</td>
+                                            <td>
+                                                {% for participant in conversation.participants.all %}
+                                                    <span class="badge bg-secondary me-1">{{ participant.username }}</span>
+                                                {% endfor %}
+                                            </td>
+                                            <td>{{ conversation.messages.count }}</td>
+                                            <td>
+                                                {% with unread_count=conversation.messages.filter|length %}
+                                                    {% if unread_count > 0 %}
+                                                        <span class="badge bg-danger">{{ unread_count }}</span>
+                                                    {% else %}
+                                                        <span class="badge bg-success">0</span>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>
+                                            <td>
+                                                {% if conversation.messages.last %}
+                                                    {{ conversation.messages.last.created_at|date:"d.m.Y H:i" }}<br>
+                                                    <small class="text-muted">
+                                                        {{ conversation.messages.last.sender.username }}: 
+                                                        {{ conversation.messages.last.content|truncatewords:3 }}
+                                                    </small>
+                                                {% else %}
+                                                    <span class="text-muted">Нет сообщений</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if conversation.is_active %}
+                                                    <span class="badge bg-success">Активен</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Неактивен</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'messaging:conversation_detail' conversation.id %}" 
+                                                   class="btn btn-sm btn-outline-cyber">
+                                                    <i class="fas fa-eye"></i> Просмотр
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                            <p class="text-light">Нет диалогов.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge.bg-cyber {
+        background: linear-gradient(45deg, #fcee09, #d4c000);
+        color: #000 !important;
+        font-weight: bold;
+    }
+    
+    .btn-outline-cyber {
+        border-color: #fcee09;
+        color: #fcee09;
+    }
+    
+    .btn-outline-cyber:hover {
+        background-color: #fcee09;
+        color: #000 !important;
+    }
+    
+    .table-dark th {
+        color: #fcee09;
+        border-color: #333;
+    }
+    
+    .table-dark td {
+        border-color: #333;
+    }
+    
+    .table-dark tr:hover {
+        background-color: rgba(252, 238, 9, 0.05);
+    }
+</style>
+{% endblock %}

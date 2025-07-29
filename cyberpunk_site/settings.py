@@ -1,5 +1,3 @@
-# cyberpunk_site/settings.py
-
 """
 Django settings for cyberpunk_site project.
 
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'market',  # Your custom app
+    'messaging', # Новое приложение для мессенджера
 ]
 
 MIDDLEWARE = [
@@ -73,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media', # Для работы с MEDIA_URL в шаблонах
             ],
         },
     },
@@ -93,7 +93,7 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+#    https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
+#    https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'ru' # Assuming Russian based on previous code
 
@@ -139,6 +139,11 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static', # Your project-level 'static' directory for custom static files
 ]
 
+# Media files (Uploaded files like item images)
+# https://docs.djangoproject.com/en/4.2/topics/files/
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -147,7 +152,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login/Logout redirects (Optional, but useful)
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-# Media files (Uploaded files like item images)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
