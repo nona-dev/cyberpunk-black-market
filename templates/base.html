@@ -318,22 +318,7 @@
     </nav>
 
     <!-- Основной контент -->
-    <main class="container mt-4">
-        <!-- 
-            Отображаем только важные сообщения. 
-            Сообщения об успешной отправке сообщений в мессенджере будут игнорироваться.
-        -->
-        {% if messages %}
-            {% for message in messages %}
-                <!-- Проверяем, не является ли сообщение о простой отправке сообщения -->
-                {% if not "отправлено" in message|stringformat:"s" or not "Сообщение" in message|stringformat:"s" %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+   <main class="container mt-4">
         {% block content %}
         {% endblock %}
     </main>
