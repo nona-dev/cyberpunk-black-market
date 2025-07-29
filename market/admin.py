@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.urls import path
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
 from .models import Category, Item, UserProfile, Order, OrderItem, Cart, CartItem
 
 @admin.register(Category)
@@ -19,25 +22,22 @@ class ItemAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description')
     list_editable = ('price', 'stock', 'is_available', 'required_tier')
     
-    fieldsets = (
-        ('Основная информация', {
-            'fields': ('name', 'description', 'category', 'price', 'rarity')
-        }),
-        ('Инвентарь', {
-            'fields': ('stock', 'is_available', 'image')
-        }),
-        ('Требования', {
-            'fields': ('required_tier',)
-        }),
-        ('Характеристики Cyberpunk RED', {
-            'fields': ('item_type', 'requirement', 'mount_location', 'humanity_loss', 'bonus_to_hit', 'damage', 'sdp', 'ammo_capacity', 'upgrade_slots')
-        }),
-        ('Дополнительно', {
-            'fields': ('created_at',)
-        }),
-    )
+    # Добавим действие для копирования
+    actions = ['duplicate_items']
     
-    readonly_fields = ('created_at',)
+    def duplicate_items(self, request, queryset):
+        """Действие: Сделать копии выбранных товаров"""
+        count = 0
+        for item in queryset:
+            # Создаем копию товара
+            item.pk = None  # Сбрасываем первичный ключ, чтобы создать новую запись
+            item.name = f"{item.name} (копия)"
+            item.save()
+            count += 1
+        
+        self.message_user(request, f"Создано {count} копий товаров.")
+    
+    duplicate_items.short_description = "Сделать копии выбранных товаров"
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -90,5 +90,5 @@ class CartAdmin(admin.ModelAdmin):
 
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ('cart', 'item', 'quantity')
+    list_display = ('cart', 'item', 'quantity', 'price')
     list_filter = ('cart__created_at',)
