@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-your-very-long-secret-key-here-change-it-in-produc
 DEBUG = True
 
 ALLOWED_HOSTS = ['nonastern.pythonanywhere.com', 'localhost', '127.0.0.1']
-# Можно также добавить localhost для локальной разработки:
+# Можно также добавить ааааlocalhost для локальной разработки:
 # ALLOWED_HOSTS = ['nonastern.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 # Application definition
