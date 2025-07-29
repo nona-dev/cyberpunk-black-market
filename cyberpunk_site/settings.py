@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-your-very-long-secret-key-here-change-it-in-production'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False # Important: Set to False in production
+DEBUG = True # Important: Set to False in production
 
 # Hosts/domain names that are valid for this site.
 # This is crucial for security. Add your PythonAnywhere domain here.
